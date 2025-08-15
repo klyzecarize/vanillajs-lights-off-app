@@ -1,17 +1,41 @@
 class LightsOff {
     constructor() {
         this.tbodyTag = document.querySelector('tbody');
+        this.adjacentCells = [];
         
-        this.tbodyTag.addEventListener('click', this._changeCellColor.bind(this));
+        this.tbodyTag.addEventListener('click', this._handleClick.bind(this));
     }
 
-    _changeCellColor ({target}) {
+    _handleClick ({target}) {
         if (target.classList.contains('lights')) {
-            target.dataset.isOn === "true" ? target.classList.remove("bg-success")
-                : target.classList.add('bg-success');
-
-            target.dataset.isOn = target.dataset.isOn === "true" ? "false" : "true";
+            this._changeCellColor(target);
+            this._getAdjacentCells(target);
         }
+    }
+
+    _getAdjacentCells (targetElement) {
+        console.log(targetElement.id);
+        const clickedId = parseInt(targetElement.id);
+
+        // Left
+        (clickedId - 1) > 0 && this.adjacentCells.push(clickedId - 1);
+        // Right
+        (clickedId + 1) < 6 && this.adjacentCells.push(clickedId + 1);
+
+        this.adjacentCells.forEach(cell => {
+            const rowElement = document.getElementById(cell);
+
+            this._changeCellColor(rowElement);
+        });
+
+        this.adjacentCells = [];
+    }
+
+    _changeCellColor (targetElement) {
+        targetElement.dataset.isOn === "true" ? targetElement.classList.remove("bg-success")
+            : targetElement.classList.add('bg-success');
+
+        targetElement.dataset.isOn = targetElement.dataset.isOn === "true" ? "false" : "true";
     }
 }
 
