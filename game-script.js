@@ -1,12 +1,20 @@
 class LightsOff {
     constructor() {
         this.tbodyTag = document.querySelector('tbody');
+        this.newGameBtn = document.querySelector('#new-game');
+
+        // Event Listener
+        this.tbodyTag.addEventListener('click', this._handleClick.bind(this));
+        this.newGameBtn.addEventListener('click', this._newGame.bind(this));
+
+        this._newGame();
+
+    }
+
+    _newGame () {
         this.arCells = [];
         // object for now
         this.cellMap = {};
-        
-        // Event Listener
-        this.tbodyTag.addEventListener('click', this._handleClick.bind(this));
         
         this._init();
     }
