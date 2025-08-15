@@ -40,9 +40,6 @@ class LightsOff {
     }
 
     _changeCellColor (targetElement) {
-        targetElement.dataset.isOn === "true" ? targetElement.classList.remove("bg-success")
-            : targetElement.classList.add('bg-success');
-
         targetElement.dataset.isOn = targetElement.dataset.isOn === "true" ? "false" : "true";
     }
 }
