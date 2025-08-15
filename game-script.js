@@ -2,6 +2,8 @@ class LightsOff {
     constructor() {
         this.tbodyTag = document.querySelector('tbody');
         this.arCells = [];
+        // object for now
+        this.cellMap = {};
         
         // Event Listener
         this.tbodyTag.addEventListener('click', this._handleClick.bind(this));
@@ -10,6 +12,11 @@ class LightsOff {
     }
 
     _init() {
+        document.querySelectorAll('td').forEach( cell => {
+            // This will solve the requery DOM issue 
+            this.cellMap[cell.dataset.row] = cell;
+        });
+
         this._handlePuzzleGenerator();
     }
 
@@ -25,7 +32,7 @@ class LightsOff {
 
     _handleChangeLights () {
         this.arCells.forEach(cell => {
-            const rowElement = document.querySelector(`[data-row="${cell}"]`);
+            const rowElement = this.cellMap[cell];
 
             this._changeCellColor(rowElement);
         });
