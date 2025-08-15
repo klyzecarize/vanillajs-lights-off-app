@@ -61,7 +61,7 @@ class LightsOff {
 
     _handlePuzzleGenerator () {
         const randomizer = () => Math.floor((Math.random() * 5) + 1);
-        let arPuzzleCells = [randomizer(), randomizer(), randomizer(), randomizer()];
+        let arPuzzleCells = [randomizer(), randomizer(), randomizer(), randomizer(), randomizer()];
 
         arPuzzleCells.forEach( randomCell => {
             this._getCells(randomCell);
