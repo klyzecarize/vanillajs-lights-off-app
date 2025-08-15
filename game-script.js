@@ -1,34 +1,42 @@
 class LightsOff {
     constructor() {
         this.tbodyTag = document.querySelector('tbody');
-        this.adjacentCells = [];
+        this.arCells = [];
         
         this.tbodyTag.addEventListener('click', this._handleClick.bind(this));
     }
 
     _handleClick ({target}) {
         if (target.classList.contains('lights')) {
-            this._changeCellColor(target);
-            this._getAdjacentCells(target);
+            this._handleChangeLights(target);
         }
     }
 
-    _getAdjacentCells (targetElement) {
-        console.log(targetElement.id);
-        const clickedId = parseInt(targetElement.id);
+    _handleChangeLights (targetElement) {
+        let location = {
+            row: parseInt(targetElement.dataset.row)
+        }
 
-        // Left
-        (clickedId - 1) > 0 && this.adjacentCells.push(clickedId - 1);
-        // Right
-        (clickedId + 1) < 6 && this.adjacentCells.push(clickedId + 1);
+        this._getCells(location);
 
-        this.adjacentCells.forEach(cell => {
-            const rowElement = document.getElementById(cell);
+        this.arCells.forEach(cell => {
+            const rowElement = document.querySelector(`[data-row="${cell}"]`);
 
             this._changeCellColor(rowElement);
         });
 
-        this.adjacentCells = [];
+        this.arCells = [];
+    }
+
+    _getCells (location) {
+        const clickedId = location;
+
+        this.arCells.push(location.row);
+
+        // Left
+        (clickedId.row - 1) > 0 && this.arCells.push(clickedId.row - 1);
+        // Right
+        (clickedId.row + 1) < 6 && this.arCells.push(clickedId.row + 1);
     }
 
     _changeCellColor (targetElement) {
