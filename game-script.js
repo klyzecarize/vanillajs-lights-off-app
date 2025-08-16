@@ -22,7 +22,10 @@ class LightsOff {
     }
 
     _init() {
-        this._renderCells();
+        document.querySelectorAll('td').length === 0 && this._renderCells();
+
+        console.log(document.querySelectorAll('td'));
+        // console.log(document.querySelectorAll('td'))
 
         document.querySelectorAll('td').forEach( cell => {
             // This will solve the requery DOM issue 
