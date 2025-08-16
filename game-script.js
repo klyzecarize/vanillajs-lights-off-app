@@ -8,18 +8,22 @@ class LightsOff {
         this.newGameBtn.addEventListener('click', this._newGame.bind(this));
 
         this._newGame();
-
     }
 
     _newGame () {
         this.arCells = [];
+
         // object for now
         this.cellMap = {};
+
+        this.maxCells = 5;
         
         this._init();
     }
 
     _init() {
+        this._renderCells();
+
         document.querySelectorAll('td').forEach( cell => {
             // This will solve the requery DOM issue 
             this.cellMap[cell.dataset.row] = cell;
@@ -60,7 +64,7 @@ class LightsOff {
         // Left
         (clickedId.row - 1) > 0 && this.arCells.push(clickedId.row - 1);
         // Right
-        (clickedId.row + 1) < 6 && this.arCells.push(clickedId.row + 1);
+        (clickedId.row + 1) <= this.maxCells && this.arCells.push(clickedId.row + 1);
     }
 
     _changeCellColor (targetElement) {
@@ -83,6 +87,21 @@ class LightsOff {
         let lightsOff = document.querySelectorAll(`td[data-is-on="false"]`);
 
         lightsOff.length === 5 && alert('You Win');
+    }
+
+    _renderCells () {
+        this.tbodyTag.innerHTML = "";
+
+        this.tbodyTag.insertAdjacentHTML('beforeend', '<tr></tr>');
+
+        for(let rowIndex = 1; rowIndex <= this.maxCells; rowIndex++) {
+            const rowHTML = `
+                <td class="lights h-100 bg-gradient" data-row="${rowIndex}" data-is-on="false"></td>
+            `;
+
+            const getTr = document.querySelector('tr');
+            getTr.insertAdjacentHTML('beforeend', rowHTML);
+        }
     }
 }
 
