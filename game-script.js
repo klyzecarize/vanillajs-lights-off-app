@@ -3,6 +3,9 @@ class LightsOff {
         this.tbodyTag = document.querySelector('tbody');
         this.newGameBtn = document.querySelector('#new-game');
 
+        // object for now
+        this.cellMap = new Map();
+
         // Event Listener
         this.tbodyTag.addEventListener('click', this._handleClick.bind(this));
         this.newGameBtn.addEventListener('click', this._newGame.bind(this));
@@ -13,24 +16,17 @@ class LightsOff {
     _newGame () {
         this.arCells = [];
 
-        // object for now
-        this.cellMap = {};
-
         this.maxCells = 5;
         
         this._init();
     }
 
     _init() {
-        document.querySelectorAll('td').length === 0 && this._renderCells();
-
-        console.log(document.querySelectorAll('td'));
-        // console.log(document.querySelectorAll('td'))
-
-        document.querySelectorAll('td').forEach( cell => {
-            // This will solve the requery DOM issue 
-            this.cellMap[cell.dataset.row] = cell;
-        });
+        (this.cellMap.size > 0) ?  this.cellMap.forEach( 
+                cell => {
+                    cell.dataset.isOn = "false";
+                }
+            ) : this._renderCells();
 
         this._handlePuzzleGenerator();
     }
@@ -41,13 +37,12 @@ class LightsOff {
             this._handleChangeLights();
 
             this._checkLights();
-
         }
     }
 
     _handleChangeLights () {
         this.arCells.forEach(cell => {
-            const rowElement = this.cellMap[cell];
+            const rowElement = this.cellMap.get(`${cell}`);
 
             this._changeCellColor(rowElement);
         });
@@ -81,9 +76,9 @@ class LightsOff {
         arPuzzleCells.forEach( randomCell => {
             this._getCells(randomCell);
             this._handleChangeLights();
-
-            this.arCells = [];
         });
+
+        this.arCells = [];
     }
 
     _checkLights () {
@@ -104,6 +99,10 @@ class LightsOff {
 
             const getTr = document.querySelector('tr');
             getTr.insertAdjacentHTML('beforeend', rowHTML);
+
+            // set the cell so that I can call it for a new game
+            const getNewCell = getTr.lastElementChild;
+            this.cellMap.set(`${rowIndex}`, getNewCell)
         }
     }
 }
