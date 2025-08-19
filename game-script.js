@@ -33,7 +33,12 @@ class LightsOff {
 
     _handleClick ({target}) {
         if (target.classList.contains('lights')) {
-            this._getCells(target.dataset.row);
+            let location = {
+                col: parseInt(target.dataset.col),
+                row: parseInt(target.dataset.row)
+            };
+
+            this._getCells(location);
             this._handleChangeLights();
 
             this._checkLights();
@@ -42,7 +47,7 @@ class LightsOff {
 
     _handleChangeLights () {
         this.arCells.forEach(cell => {
-            const rowElement = this.cellMap.get(`${cell}`);
+            const rowElement = this.cellMap.get(`${cell.col}-${cell.row}`);
 
             this._changeCellColor(rowElement);
         });
@@ -50,19 +55,43 @@ class LightsOff {
         this.arCells = [];
     }
 
-    _getCells (selectedRow) {
-        let location = {
-            row: parseInt(selectedRow)
+    _getCells (selectedCell) {
+        // The Math.max checks while the Math.min checks the max boundary
+        const getAdjacentCells = (value) => {
+            return Math.min(Math.max(1, value), this.maxCells);
         };
 
-        const clickedId = location;
+        const checkNotEqual = (value) => {
+            if (selectedCell.col !== value.col || selectedCell.row !== value.row){
+                this.arCells.push(value);
+            }
+        };
 
-        this.arCells.push(clickedId.row);
+        this.arCells.push(selectedCell);
 
         // Left
-        (clickedId.row - 1) > 0 && this.arCells.push(clickedId.row - 1);
+        checkNotEqual({
+            col: getAdjacentCells(selectedCell.col),
+            row: getAdjacentCells(selectedCell.row - 1)
+        });
+        
         // Right
-        (clickedId.row + 1) <= this.maxCells && this.arCells.push(clickedId.row + 1);
+        checkNotEqual({
+            col: getAdjacentCells(selectedCell.col),
+            row: getAdjacentCells(selectedCell.row + 1)
+        });
+
+        // Up
+        checkNotEqual({
+            col: getAdjacentCells(selectedCell.col + 1),
+            row: getAdjacentCells(selectedCell.row)
+        });
+
+        // Down
+        checkNotEqual({
+            col: getAdjacentCells(selectedCell.col - 1),
+            row: getAdjacentCells(selectedCell.row)
+        });       
     }
 
     _changeCellColor (targetElement) {
@@ -70,8 +99,14 @@ class LightsOff {
     }
 
     _handlePuzzleGenerator () {
-        const randomizer = () => Math.floor((Math.random() * 5) + 1);
-        let arPuzzleCells = [randomizer(), randomizer(), randomizer(), randomizer(), randomizer()];
+        const randomizer = () => Math.floor((Math.random() * this.maxCells) + 1);
+        let arPuzzleCells = [
+            { col: randomizer(), row: randomizer()}, 
+            { col: randomizer(), row: randomizer()}, 
+            { col: randomizer(), row: randomizer()}, 
+            { col: randomizer(), row: randomizer()}, 
+            { col: randomizer(), row: randomizer()}
+        ];
 
         arPuzzleCells.forEach( randomCell => {
             this._getCells(randomCell);
@@ -90,19 +125,23 @@ class LightsOff {
     _renderCells () {
         this.tbodyTag.innerHTML = "";
 
-        this.tbodyTag.insertAdjacentHTML('beforeend', '<tr></tr>');
+        for (let colIndex = 1; colIndex <= this.maxCells; colIndex++) {
+            this.tbodyTag.insertAdjacentHTML('beforeend', '<tr></tr>');
 
-        for(let rowIndex = 1; rowIndex <= this.maxCells; rowIndex++) {
-            const rowHTML = `
-                <td class="lights h-100 bg-gradient" data-row="${rowIndex}" data-is-on="false"></td>
-            `;
+            for(let rowIndex = 1; rowIndex <= this.maxCells; rowIndex++) {
+                const rowHTML = `
+                    <td class="lights h-100 p-5 bg-gradient" data-col="${colIndex}" data-row="${rowIndex}" data-is-on="false"></td>
+                `;
 
-            const getTr = document.querySelector('tr');
-            getTr.insertAdjacentHTML('beforeend', rowHTML);
+                // get the last added tr to put the cells
+                const getTr = document.querySelector('tr:last-child');
+                getTr.insertAdjacentHTML('beforeend', rowHTML);
 
-            // set the cell so that I can call it for a new game
-            const getNewCell = getTr.lastElementChild;
-            this.cellMap.set(`${rowIndex}`, getNewCell)
+                // set the cell so that I can call it for a new game
+                const getNewCell = getTr.lastElementChild;
+                this.cellMap.set(`${colIndex}-${rowIndex}`, getNewCell)
+            }
+            
         }
     }
 }
