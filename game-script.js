@@ -15,12 +15,9 @@ class LightsOff {
 
         this._newGame();
     }
-
-    _show () {
-        return { show: true };
-    }
-
     _newGame () {
+        this.newGameModal.hide();
+
         this.arCells = [];
 
         this.score = 0;
