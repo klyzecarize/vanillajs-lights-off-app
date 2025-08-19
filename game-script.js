@@ -102,10 +102,10 @@ class LightsOff {
         const randomizer = () => Math.floor((Math.random() * this.maxCells) + 1);
         let arPuzzleCells = [
             { col: randomizer(), row: randomizer()}, 
-            { col: randomizer(), row: randomizer()}, 
-            { col: randomizer(), row: randomizer()}, 
-            { col: randomizer(), row: randomizer()}, 
-            { col: randomizer(), row: randomizer()}
+            // { col: randomizer(), row: randomizer()}, 
+            // { col: randomizer(), row: randomizer()}, 
+            // { col: randomizer(), row: randomizer()}, 
+            // { col: randomizer(), row: randomizer()}
         ];
 
         arPuzzleCells.forEach( randomCell => {
@@ -117,9 +117,15 @@ class LightsOff {
     }
 
     _checkLights () {
-        let lightsOff = document.querySelectorAll(`td[data-is-on="false"]`);
+        let lightsOff = 0;
 
-        lightsOff.length === 5 && alert('You Win');
+        this.cellMap.forEach(cell => {
+            cell.dataset.isOn === "false" && lightsOff++;
+        });
+
+        // let lightsOff = document.querySelectorAll(`td[data-is-on="false"]`);
+
+        lightsOff === this.maxCells * this.maxCells && alert('You Win');
     }
 
     _renderCells () {
