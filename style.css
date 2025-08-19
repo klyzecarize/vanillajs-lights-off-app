@@ -2,8 +2,8 @@ body {
     background-color: aquamarine;
 }
 
-tbody {
-    height: 250px;
+table {
+    height: 500px;
 }
 
 td[data-is-on=true] {
