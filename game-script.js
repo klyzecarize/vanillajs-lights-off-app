@@ -2,6 +2,7 @@ class LightsOff {
     constructor() {
         this.tbodyTag = document.querySelector('tbody');
         this.newGameBtn = document.querySelector('#new-game');
+        this.scoreTag = document.querySelector('#score');
 
         // object for now
         this.cellMap = new Map();
@@ -16,12 +17,16 @@ class LightsOff {
     _newGame () {
         this.arCells = [];
 
+        this.score = 0;
+
         this.maxCells = 5;
         
         this._init();
     }
 
     _init() {
+        this.scoreTag.innerHTML = this.score;
+
         (this.cellMap.size > 0) ?  this.cellMap.forEach( 
                 cell => {
                     cell.dataset.isOn = "false";
@@ -42,6 +47,10 @@ class LightsOff {
             this._handleChangeLights();
 
             this._checkLights();
+
+            this.score++;
+
+            this.scoreTag.innerHTML = this.score;
         }
     }
 
