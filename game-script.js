@@ -43,14 +43,14 @@ class LightsOff {
                 row: parseInt(target.dataset.row)
             };
 
+            this.score++;
+
+            this.scoreTag.innerHTML = this.score;
+
             this._getCells(location);
             this._handleChangeLights();
 
             this._checkLights();
-
-            this.score++;
-
-            this.scoreTag.innerHTML = this.score;
         }
     }
 
@@ -65,42 +65,33 @@ class LightsOff {
     }
 
     _getCells (selectedCell) {
-        // The Math.max checks while the Math.min checks the max boundary
-        const getAdjacentCells = (value) => {
-            return Math.min(Math.max(1, value), this.maxCells);
-        };
 
-        const checkNotEqual = (value) => {
-            if (selectedCell.col !== value.col || selectedCell.row !== value.row){
-                this.arCells.push(value);
-            }
-        };
-
+        // Selected Cell
         this.arCells.push(selectedCell);
 
         // Left
-        checkNotEqual({
-            col: getAdjacentCells(selectedCell.col),
-            row: getAdjacentCells(selectedCell.row - 1)
+        (selectedCell.row - 1) > 0 && this.arCells.push({
+            col: selectedCell.col,
+            row: selectedCell.row - 1
         });
         
         // Right
-        checkNotEqual({
-            col: getAdjacentCells(selectedCell.col),
-            row: getAdjacentCells(selectedCell.row + 1)
-        });
+        (selectedCell.row + 1) <= this.maxCells && this.arCells.push({
+            col: selectedCell.col,
+            row: selectedCell.row + 1
+        });  
 
         // Up
-        checkNotEqual({
-            col: getAdjacentCells(selectedCell.col + 1),
-            row: getAdjacentCells(selectedCell.row)
+        (selectedCell.col - 1) > 0 && this.arCells.push({
+            col: selectedCell.col - 1,
+            row: selectedCell.row
         });
-
+        
         // Down
-        checkNotEqual({
-            col: getAdjacentCells(selectedCell.col - 1),
-            row: getAdjacentCells(selectedCell.row)
-        });       
+        (selectedCell.col + 1) <= this.maxCells && this.arCells.push({
+            col: selectedCell.col + 1,
+            row: selectedCell.row
+        });   
     }
 
     _changeCellColor (targetElement) {
