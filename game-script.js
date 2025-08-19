@@ -3,6 +3,8 @@ class LightsOff {
         this.tbodyTag = document.querySelector('tbody');
         this.newGameBtn = document.querySelector('#new-game');
         this.scoreTag = document.querySelector('#score');
+        this.newGameModal = new bootstrap.Modal('#newGameModal');
+        // this.newGameModal = document.querySelector('#newGameModal');
 
         // object for now
         this.cellMap = new Map();
@@ -12,6 +14,10 @@ class LightsOff {
         this.newGameBtn.addEventListener('click', this._newGame.bind(this));
 
         this._newGame();
+    }
+
+    _show () {
+        return { show: true };
     }
 
     _newGame () {
@@ -102,10 +108,10 @@ class LightsOff {
         const randomizer = () => Math.floor((Math.random() * this.maxCells) + 1);
         let arPuzzleCells = [
             { col: randomizer(), row: randomizer()}, 
-            { col: randomizer(), row: randomizer()}, 
-            { col: randomizer(), row: randomizer()}, 
-            { col: randomizer(), row: randomizer()}, 
-            { col: randomizer(), row: randomizer()}
+            // { col: randomizer(), row: randomizer()}, 
+            // { col: randomizer(), row: randomizer()}, 
+            // { col: randomizer(), row: randomizer()}, 
+            // { col: randomizer(), row: randomizer()}
         ];
 
         arPuzzleCells.forEach( randomCell => {
@@ -123,9 +129,7 @@ class LightsOff {
             cell.dataset.isOn === "false" && lightsOff++;
         });
 
-        // let lightsOff = document.querySelectorAll(`td[data-is-on="false"]`);
-
-        lightsOff === this.maxCells * this.maxCells && alert('You Win');
+        lightsOff === this.maxCells * this.maxCells && this.newGameModal.show();
     }
 
     _renderCells () {
