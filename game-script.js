@@ -6,14 +6,35 @@ class LightsOff {
         this.finalScoreTag = document.querySelector('#finalScore');
         this.newGameModal = new bootstrap.Modal('#newGameModal');
         this.titleText = document.querySelector('.modal-title');
+        this.selectDifficulty = document.querySelector('#selectDifficulty' );
 
         // object for now
         this.cellMap = new Map();
 
+        this.maxCells = 3;
+
         // Event Listener
         this.tbodyTag.addEventListener('click', this._handleClick.bind(this));
         this.newGameBtn.addEventListener('click', this._newGame.bind(this));
+        this.selectDifficulty.addEventListener('change', this._changeDifficulty.bind(this));
 
+        this._newGame();
+    }
+
+    _changeDifficulty ({target}) {
+        switch (target.value) {
+            case '1':
+                this.maxCells = 3;
+                break;
+            case '2':
+                this.maxCells = 4;
+                break;
+            case '3':
+                this.maxCells = 5;
+                break;
+        }
+
+        this._renderCells();
         this._newGame();
     }
 
@@ -25,8 +46,6 @@ class LightsOff {
         this.arCells = [];
 
         this.score = 0;
-
-        this.maxCells = 5;
         
         this._init();
     }
