@@ -2,15 +2,6 @@ body {
     background-color: aquamarine;
 }
 
-/* table {
-    width: 100%;
-} */
-
-/* td {
-    height: 50px;
-    width: 50px;
-} */
-
 td[data-is-on=true] {
     background-color: var(--bs-success);
 }

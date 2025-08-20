@@ -8,7 +8,6 @@ class LightsOff {
         this.titleText = document.querySelector('.modal-title');
         this.selectDifficulty = document.querySelector('#selectDifficulty' );
 
-        // object for now
         this.cellMap = new Map();
 
         this.maxCells = 3;
