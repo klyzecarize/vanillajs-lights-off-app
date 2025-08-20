@@ -2,10 +2,6 @@ body {
     background-color: aquamarine;
 }
 
-table {
-    height: 500px;
-}
-
 td[data-is-on=true] {
     background-color: var(--bs-success);
 }

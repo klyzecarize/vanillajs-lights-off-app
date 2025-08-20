@@ -2,26 +2,57 @@ class LightsOff {
     constructor() {
         this.tbodyTag = document.querySelector('tbody');
         this.newGameBtn = document.querySelector('#new-game');
+        this.scoreTag = document.querySelector('#score');
+        this.finalScoreTag = document.querySelector('#finalScore');
+        this.newGameModal = new bootstrap.Modal('#newGameModal');
+        this.titleText = document.querySelector('.modal-title');
+        this.selectDifficulty = document.querySelector('#selectDifficulty' );
 
-        // object for now
         this.cellMap = new Map();
+
+        this.maxCells = 3;
 
         // Event Listener
         this.tbodyTag.addEventListener('click', this._handleClick.bind(this));
         this.newGameBtn.addEventListener('click', this._newGame.bind(this));
+        this.selectDifficulty.addEventListener('change', this._changeDifficulty.bind(this));
 
         this._newGame();
     }
 
+    _changeDifficulty ({target}) {
+        switch (target.value) {
+            case '1':
+                this.maxCells = 3;
+                break;
+            case '2':
+                this.maxCells = 4;
+                break;
+            case '3':
+                this.maxCells = 5;
+                break;
+        }
+
+        this._renderCells();
+        this._newGame();
+    }
+
     _newGame () {
+        this.newGameModal.hide();
+
+        this.titleText.innerHTML = "Retry?";
+
         this.arCells = [];
 
-        this.maxCells = 5;
+        this.score = 0;
         
         this._init();
     }
 
     _init() {
+        this.scoreTag.innerHTML = this.score;
+        this.finalScoreTag.innerHTML = this.score;
+
         (this.cellMap.size > 0) ?  this.cellMap.forEach( 
                 cell => {
                     cell.dataset.isOn = "false";
@@ -37,6 +68,11 @@ class LightsOff {
                 col: parseInt(target.dataset.col),
                 row: parseInt(target.dataset.row)
             };
+
+            this.score++;
+
+            this.scoreTag.innerHTML = this.score;
+            this.finalScoreTag.innerHTML = this.score;
 
             this._getCells(location);
             this._handleChangeLights();
@@ -56,42 +92,33 @@ class LightsOff {
     }
 
     _getCells (selectedCell) {
-        // The Math.max checks while the Math.min checks the max boundary
-        const getAdjacentCells = (value) => {
-            return Math.min(Math.max(1, value), this.maxCells);
-        };
 
-        const checkNotEqual = (value) => {
-            if (selectedCell.col !== value.col || selectedCell.row !== value.row){
-                this.arCells.push(value);
-            }
-        };
-
+        // Selected Cell
         this.arCells.push(selectedCell);
 
         // Left
-        checkNotEqual({
-            col: getAdjacentCells(selectedCell.col),
-            row: getAdjacentCells(selectedCell.row - 1)
+        (selectedCell.row - 1) > 0 && this.arCells.push({
+            col: selectedCell.col,
+            row: selectedCell.row - 1
         });
         
         // Right
-        checkNotEqual({
-            col: getAdjacentCells(selectedCell.col),
-            row: getAdjacentCells(selectedCell.row + 1)
-        });
+        (selectedCell.row + 1) <= this.maxCells && this.arCells.push({
+            col: selectedCell.col,
+            row: selectedCell.row + 1
+        });  
 
         // Up
-        checkNotEqual({
-            col: getAdjacentCells(selectedCell.col + 1),
-            row: getAdjacentCells(selectedCell.row)
+        (selectedCell.col - 1) > 0 && this.arCells.push({
+            col: selectedCell.col - 1,
+            row: selectedCell.row
         });
-
+        
         // Down
-        checkNotEqual({
-            col: getAdjacentCells(selectedCell.col - 1),
-            row: getAdjacentCells(selectedCell.row)
-        });       
+        (selectedCell.col + 1) <= this.maxCells && this.arCells.push({
+            col: selectedCell.col + 1,
+            row: selectedCell.row
+        });   
     }
 
     _changeCellColor (targetElement) {
@@ -123,9 +150,10 @@ class LightsOff {
             cell.dataset.isOn === "false" && lightsOff++;
         });
 
-        // let lightsOff = document.querySelectorAll(`td[data-is-on="false"]`);
-
-        lightsOff === this.maxCells * this.maxCells && alert('You Win');
+        if (lightsOff === this.maxCells * this.maxCells) {
+            this.titleText.innerHTML = "YOU WIN!";
+            this.newGameModal.show();
+        } 
     }
 
     _renderCells () {
