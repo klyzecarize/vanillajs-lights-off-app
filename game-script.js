@@ -3,8 +3,9 @@ class LightsOff {
         this.tbodyTag = document.querySelector('tbody');
         this.newGameBtn = document.querySelector('#new-game');
         this.scoreTag = document.querySelector('#score');
+        this.finalScoreTag = document.querySelector('#finalScore');
         this.newGameModal = new bootstrap.Modal('#newGameModal');
-        // this.newGameModal = document.querySelector('#newGameModal');
+        this.titleText = document.querySelector('.modal-title');
 
         // object for now
         this.cellMap = new Map();
@@ -15,8 +16,11 @@ class LightsOff {
 
         this._newGame();
     }
+
     _newGame () {
         this.newGameModal.hide();
+
+        this.titleText.innerHTML = "Retry?";
 
         this.arCells = [];
 
@@ -29,6 +33,7 @@ class LightsOff {
 
     _init() {
         this.scoreTag.innerHTML = this.score;
+        this.finalScoreTag.innerHTML = this.score;
 
         (this.cellMap.size > 0) ?  this.cellMap.forEach( 
                 cell => {
@@ -49,6 +54,7 @@ class LightsOff {
             this.score++;
 
             this.scoreTag.innerHTML = this.score;
+            this.finalScoreTag.innerHTML = this.score;
 
             this._getCells(location);
             this._handleChangeLights();
@@ -126,7 +132,10 @@ class LightsOff {
             cell.dataset.isOn === "false" && lightsOff++;
         });
 
-        lightsOff === this.maxCells * this.maxCells && this.newGameModal.show();
+        if (lightsOff === this.maxCells * this.maxCells) {
+            this.titleText.innerHTML = "YOU WIN!";
+            this.newGameModal.show();
+        } 
     }
 
     _renderCells () {
