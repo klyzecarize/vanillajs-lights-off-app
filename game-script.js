@@ -130,10 +130,10 @@ class LightsOff {
         const randomizer = () => Math.floor((Math.random() * this.maxCells) + 1);
         let arPuzzleCells = [
             { col: randomizer(), row: randomizer()}, 
-            // { col: randomizer(), row: randomizer()}, 
-            // { col: randomizer(), row: randomizer()}, 
-            // { col: randomizer(), row: randomizer()}, 
-            // { col: randomizer(), row: randomizer()}
+            { col: randomizer(), row: randomizer()}, 
+            { col: randomizer(), row: randomizer()}, 
+            { col: randomizer(), row: randomizer()}, 
+            { col: randomizer(), row: randomizer()}
         ];
 
         arPuzzleCells.forEach( randomCell => {
