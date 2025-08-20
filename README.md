@@ -9,3 +9,6 @@ The goal is to recreate the game while reinforcing the skills I've learned and t
  - CSS
  - JavaScript
  - Bootstrap
+
+ ## Published Link
+ [Lights Off Game](https://klyzecarize.github.io/vanillajs-lights-off-app)
